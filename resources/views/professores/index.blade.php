@@ -1,57 +1,38 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <h2 class="my-4">Lista de Professores</h2>
-
-    <!-- Botão para adicionar um novo professor -->
-    <a href="{{ route('professores.create') }}" class="btn btn-success mb-3">Adicionar Professor</a>
-
-    <!-- Tabela com os dados dos professores -->
-    <table class="table table-bordered">
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Professores</title>
+    <style>
+        body { font-family: sans-serif; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #000; padding: 4px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h2>Lista de Professores</h2>
+    <table>
         <thead>
             <tr>
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Telefone</th>
                 <th>Especialidade</th>
-                <th>Cadeiras</th>
-                <th>Ações</th>
+                <th>Tipo</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($professores as $professor)
+            @foreach($professores as $p)
                 <tr>
-                    <td>{{ $professor->nome }}</td>
-                    <td>{{ $professor->email }}</td>
-                    <td>{{ $professor->telefone }}</td>
-                    <td>{{ $professor->especialidade }}</td>
-                    <td>
-                        <!-- Exibindo as cadeiras do professor -->
-                        @foreach($professor->cadeiras as $cadeira)
-                            <span class="badge badge-primary">{{ $cadeira->nome }}</span>
-                        @endforeach
-                    </td>
-                    <td>
-                        <!-- Botão para editar o professor -->
-                        <a href="{{ route('professores.edit', $professor->id) }}" class="btn btn-warning btn-sm">Editar</a>
-
-                        <!-- Botão para deletar o professor -->
-                        <form action="{{ route('professores.destroy', $professor->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
-                        </form>
-
-                        <!-- Botão para imprimir os detalhes do professor -->
-                        <a href="{{ route('professores.imprimir', $professor->id) }}" class="btn btn-info btn-sm" target="_blank">Imprimir</a>
-                    </td>
+                    <td>{{ $p->nome }}</td>
+                    <td>{{ $p->email }}</td>
+                    <td>{{ $p->telefone }}</td>
+                    <td>{{ $p->especialidade }}</td>
+                    <td>{{ ucfirst($p->tipo_contratacao) }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-
-    <!-- Paginação -->
-    {{ $professores->links() }}
-</div>
-@endsection
+</body>
+</html>

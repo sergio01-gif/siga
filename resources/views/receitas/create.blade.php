@@ -33,9 +33,14 @@
             <input type="date" name="data_recebimento" class="form-control" required>
         </div>
 
-        <div class="form-group">
-            <label for="categoria">Categoria:</label>
-            <input type="text" name="categoria" class="form-control" placeholder="Ex: Mensalidade, Matrícula">
+        <div class="mb-3">
+            <label for="categoria_id" class="form-label">Categoria</label>
+            <select name="categoria_id" class="form-control" required>
+                <option value="">-- Selecionar --</option>
+                @foreach ($categorias as $categoria)
+                    <option value="{{ $categoria->id }}">{{ $categoria->nome }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="form-group">

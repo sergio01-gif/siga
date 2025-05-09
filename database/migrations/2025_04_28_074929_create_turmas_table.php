@@ -6,18 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+    public function up()
     {
         Schema::create('turmas', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
+            $table->string('nome'); // Ex: Turma A
             $table->foreignId('curso_id')->constrained('cursos')->onDelete('cascade');
-            $table->foreignId('ano_academico_id')->constrained('ano_academicos')->onDelete('cascade');
+            $table->foreignId('ano_academico_id')->constrained('anos_academicos')->onDelete('cascade');
             $table->timestamps();
         });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('turmas');
     }

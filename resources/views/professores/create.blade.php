@@ -1,88 +1,87 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>Adicionar Professor</h1>
+<div class="max-w-3xl mx-auto px-4 py-6">
+    <h1 class="text-xl font-bold text-[#0072CE] mb-4">Cadastrar Professor</h1>
 
     @if ($errors->any())
-        <div class="alert alert-danger">
-            <strong>Erro!</strong> Por favor, verifique os campos obrigatórios.<br><br>
-            <ul>
-                @foreach ($errors->all() as $erro)
-                    <li>{{ $erro }}</li>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <ul class="list-disc list-inside text-sm">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
     @endif
 
-    <form action="{{ route('professores.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('professores.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4 bg-white p-6 rounded shadow">
         @csrf
 
-        <div class="mb-3">
-            <label for="nome" class="form-label">Nome:</label>
-            <input type="text" name="nome" class="form-control" value="{{ old('nome') }}" required>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {{-- Nome --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nome</label>
+                <input type="text" name="nome" value="{{ old('nome') }}" class="w-full px-3 py-2 border rounded">
+            </div>
+
+            {{-- Email --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" name="email" value="{{ old('email') }}" class="w-full px-3 py-2 border rounded">
+            </div>
+
+            {{-- Telefone --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Telefone</label>
+                <input type="text" name="telefone" value="{{ old('telefone') }}" class="w-full px-3 py-2 border rounded">
+            </div>
+
+            {{-- Documento de Identificação --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Documento de Identificação</label>
+                <input type="text" name="documento_identificacao" value="{{ old('documento_identificacao') }}" class="w-full px-3 py-2 border rounded">
+            </div>
+
+            {{-- Tipo de Contratação --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Tipo de Contratação</label>
+                <select name="tipo_contratacao" class="w-full px-3 py-2 border rounded">
+                    <option value="">-- Selecione --</option>
+                    <option value="efetivo" {{ old('tipo_contratacao') == 'efetivo' ? 'selected' : '' }}>Efetivo</option>
+                    <option value="temporario" {{ old('tipo_contratacao') == 'temporario' ? 'selected' : '' }}>Temporário</option>
+                </select>
+            </div>
+
+            {{-- Especialidade --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Especialidade</label>
+                <input type="text" name="especialidade" value="{{ old('especialidade') }}" class="w-full px-3 py-2 border rounded">
+            </div>
+
+            {{-- Usuário Vinculado --}}
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700">Vincular ao Usuário</label>
+                <select name="usuario_id" class="w-full px-3 py-2 border rounded">
+                    <option value="">-- Selecione um Usuário --</option>
+                    @foreach($usuarios as $usuario)
+                        <option value="{{ $usuario->id }}" {{ old('usuario_id') == $usuario->id ? 'selected' : '' }}>
+                            {{ $usuario->nome }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Foto --}}
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700">Foto</label>
+                <input type="file" name="foto" class="w-full px-3 py-2 border rounded">
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label for="email" class="form-label">Email:</label>
-            <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
+        <div class="flex justify-end gap-2">
+            <a href="{{ route('professores.index') }}" class="text-sm text-gray-600 hover:underline">Cancelar</a>
+            <button type="submit" class="bg-[#0072CE] text-white px-6 py-2 rounded">Salvar</button>
         </div>
-
-        <div class="mb-3">
-            <label for="telefone" class="form-label">Telefone:</label>
-            <input type="text" name="telefone" class="form-control" value="{{ old('telefone') }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="documento_identificacao" class="form-label">Documento de Identificação:</label>
-            <input type="text" name="documento_identificacao" class="form-control" value="{{ old('documento_identificacao') }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="tipo_contratacao" class="form-label">Tipo de Contratação</label>
-            <select class="form-control" name="tipo_contratacao" required>
-                <option value="">Selecione</option>
-                <option value="Estagiário" {{ old('tipo_contratacao') == 'Estagiário' ? 'selected' : '' }}>Estagiário</option>
-                <option value="Parcial" {{ old('tipo_contratacao') == 'Parcial' ? 'selected' : '' }}>Parcial</option>
-                <option value="Tempo Inteiro" {{ old('tipo_contratacao') == 'Tempo Inteiro' ? 'selected' : '' }}>Tempo Inteiro</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="especialidade" class="form-label">Especialidade:</label>
-            <input type="text" name="especialidade" class="form-control" value="{{ old('especialidade') }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="foto" class="form-label">Foto:</label>
-            <input type="file" name="foto" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label for="usuario_id" class="form-label">Usuário Responsável:</label>
-            <select name="usuario_id" class="form-control" required>
-                <option value="">Selecione</option>
-                @foreach ($usuarios as $usuario)
-                    <option value="{{ $usuario->id }}" {{ old('usuario_id') == $usuario->id ? 'selected' : '' }}>
-                        {{ $usuario->nome }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="cadeiras" class="form-label">Cadeiras:</label>
-            <select name="cadeiras[]" class="form-control" multiple>
-                @foreach ($cadeiras as $cadeira)
-                    <option value="{{ $cadeira->id }}" {{ (collect(old('cadeiras'))->contains($cadeira->id)) ? 'selected' : '' }}>
-                        {{ $cadeira->nome }}
-                    </option>
-                @endforeach
-            </select>
-            <small class="text-muted">Pressione Ctrl (ou Cmd no Mac) para selecionar várias cadeiras.</small>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Salvar</button>
     </form>
 </div>
 @endsection

@@ -10,12 +10,12 @@ class UsuarioController extends Controller
     public function index()
     {
         $usuarios = Usuario::all();
-        return view('usuarios.index', compact('usuarios'));
+        return view('admin.usuarios.index', compact('usuarios'));
     }
 
     public function create()
     {
-        return view('usuarios.create');
+        return view('admin.usuarios.create');
     }
 
     public function store(Request $request)
@@ -27,17 +27,17 @@ class UsuarioController extends Controller
         ]);
 
         Usuario::create($request->all());
-        return redirect()->route('usuarios.index');
+        return redirect()->route('admin.usuarios.index');
     }
 
     public function show(Usuario $usuario)
     {
-        return view('usuarios.show', compact('usuario'));
+        return view('admin.usuarios.show', compact('usuario'));
     }
 
     public function edit(Usuario $usuario)
     {
-        return view('usuarios.edit', compact('usuario'));
+        return view('admin.usuarios.edit', compact('usuario'));
     }
 
     public function update(Request $request, Usuario $usuario)
@@ -49,12 +49,12 @@ class UsuarioController extends Controller
         ]);
 
         $usuario->update($request->all());
-        return redirect()->route('usuarios.index');
+        return redirect()->route('admin.usuarios.index');
     }
 
     public function destroy(Usuario $usuario)
     {
         $usuario->delete();
-        return redirect()->route('usuarios.index');
+        return redirect()->route('admin.usuarios.index');
     }
 }

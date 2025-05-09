@@ -1,131 +1,88 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Painel de Controle</h1>
-        <p class="text-gray-500">Resumo geral do sistema acadêmico</p>
+    <div class="container mx-auto p-6">
+        <div class="text-2xl font-semibold text-center mb-6">Bem-vindo ao Painel de Administração</div>
+        
+        <!-- Painel de Estatísticas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <!-- Total de Cursos -->
+            <div class="bg-blue-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center">
+                <div class="text-blue-800 text-sm font-semibold mb-2">Total de Cursos</div>
+                <div class="text-blue-900 text-3xl font-bold">{{ $totalCursos }}</div>
+            </div>
+
+            <!-- Total de Estudantes -->
+            <div class="bg-green-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center">
+                <div class="text-green-800 text-sm font-semibold mb-2">Total de Estudantes</div>
+                <div class="text-green-900 text-3xl font-bold">{{ $totalEstudantes }}</div>
+            </div>
+
+            <!-- Total de Professores -->
+            <div class="bg-yellow-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center">
+                <div class="text-yellow-800 text-sm font-semibold mb-2">Total de Professores</div>
+                <div class="text-yellow-900 text-3xl font-bold">{{ $totalProfessores }}</div>
+            </div>
+
+            <!-- Total de Estágios -->
+            <div class="bg-red-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center">
+                <div class="text-red-800 text-sm font-semibold mb-2">Total de Estágios</div>
+                <div class="text-red-900 text-3xl font-bold">{{ $totalEstagios }}</div>
+            </div>
+        </div>
+
+        <!-- Estatísticas Adicionais -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
+            <!-- Total de Faturas -->
+            <div class="bg-purple-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center">
+                <div class="text-purple-800 text-sm font-semibold mb-2">Total de Faturas</div>
+                <div class="text-purple-900 text-3xl font-bold">{{ $totalFaturas }}</div>
+            </div>
+
+            <!-- Total de Livros -->
+            <div class="bg-indigo-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center">
+                <div class="text-indigo-800 text-sm font-semibold mb-2">Total de Livros</div>
+                <div class="text-indigo-900 text-3xl font-bold">{{ $totalLivros }}</div>
+            </div>
+
+            <!-- Cursos Coordenados -->
+            <div class="bg-teal-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center">
+                <div class="text-teal-800 text-sm font-semibold mb-2">Cursos Coordenados</div>
+                <div class="text-teal-900 text-3xl font-bold">{{ $cursosCoordenados }}</div>
+            </div>
+        </div>
+
+        <!-- Novas Informações de Mensalidades -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 mt-10">
+            <!-- Total de Mensalidades -->
+            <div class="bg-orange-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center">
+                <div class="text-orange-800 text-sm font-semibold mb-2">Total de Mensalidades</div>
+                <div class="text-orange-900 text-3xl font-bold">{{ $totalMensalidades }}</div>
+            </div>
+
+            <!-- Mensalidades Pagas -->
+            <div class="bg-teal-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center">
+                <div class="text-teal-800 text-sm font-semibold mb-2">Mensalidades Pagas</div>
+                <div class="text-teal-900 text-3xl font-bold">{{ $mensalidadesPagas }}</div>
+            </div>
+
+            <!-- Mensalidades Devidas -->
+            <div class="bg-red-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center">
+                <div class="text-red-800 text-sm font-semibold mb-2">Mensalidades Devidas</div>
+                <div class="text-red-900 text-3xl font-bold">{{ $mensalidadesDevidas }}</div>
+            </div>
+
+            <!-- Total de Dívidas -->
+            <div class="bg-pink-100 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center">
+                <div class="text-pink-800 text-sm font-semibold mb-2">Total de Dívidas</div>
+                <div class="text-pink-900 text-3xl font-bold">{{ $dividaTotal }}</div>
+            </div>
+        </div>
+        <!-- Informações adicionais -->
+        <div class="mt-10 text-center">
+            <a href="{{ route('cursos.index') }}" class="bg-blue-500 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-600">Ver Todos os Cursos</a>
+            <a href="{{ route('estudantes.index') }}" class="bg-green-500 text-white py-2 px-6 rounded-lg shadow-md hover:bg-green-600 ml-4">Ver Todos os Estudantes</a>
+            <a href="{{ route('professores.index') }}" class="bg-yellow-500 text-white py-2 px-6 rounded-lg shadow-md hover:bg-yellow-600 ml-4">Ver Todos os Professores</a>
+        </div>
     </div>
-
-    <!-- Estatísticas -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-10">
-        <div class="bg-blue-100 p-5 rounded-xl shadow hover:shadow-lg transition">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-blue-800">Cursos</p>
-                    <p class="text-2xl font-bold text-blue-900">{{ $totalCursos }}</p>
-                </div>
-                <div class="text-blue-500 text-3xl">
-                    📚
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-green-100 p-5 rounded-xl shadow hover:shadow-lg transition">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-green-800">Estudantes</p>
-                    <p class="text-2xl font-bold text-green-900">{{ $totalEstudantes }}</p>
-                </div>
-                <div class="text-green-500 text-3xl">
-                    🎓
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-purple-100 p-5 rounded-xl shadow hover:shadow-lg transition">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-purple-800">Professores</p>
-                    <p class="text-2xl font-bold text-purple-900">{{ $totalProfessores }}</p>
-                </div>
-                <div class="text-purple-500 text-3xl">
-                    👨‍🏫
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-yellow-100 p-5 rounded-xl shadow hover:shadow-lg transition">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-yellow-800">Cursos Concluídos</p>
-                    <p class="text-2xl font-bold text-yellow-900">{{ $cursosConcluidos }}</p>
-                </div>
-                <div class="text-yellow-500 text-3xl">
-                    ✅
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Gráficos -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-xl shadow p-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Alunos por Curso</h2>
-            <canvas id="alunosPorCursoChart"></canvas>
-        </div>
-        <div class="bg-white rounded-xl shadow p-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Matrículas por Ano</h2>
-            <canvas id="matriculasPorAnoChart"></canvas>
-        </div>
-    </div>
-</div>
-@endsection
-
-@section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const cursosLabels = @json($cursosLabels);
-    const cursosData = @json($cursosData);
-    const alunosPorCursoCtx = document.getElementById('alunosPorCursoChart').getContext('2d');
-
-    new Chart(alunosPorCursoCtx, {
-        type: 'bar',
-        data: {
-            labels: cursosLabels,
-            datasets: [{
-                label: 'Estudantes',
-                data: cursosData,
-                backgroundColor: '#3B82F6',
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: { beginAtZero: true }
-            }
-        }
-    });
-
-    const anosLabels = @json($anosLabels);
-    const matriculasData = @json($matriculasData);
-    const matriculasPorAnoCtx = document.getElementById('matriculasPorAnoChart').getContext('2d');
-
-    new Chart(matriculasPorAnoCtx, {
-        type: 'line',
-        data: {
-            labels: anosLabels,
-            datasets: [{
-                label: 'Matrículas',
-                data: matriculasData,
-                borderColor: '#10B981',
-                backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                fill: true,
-                tension: 0.4,
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: { beginAtZero: true }
-            }
-        }
-    });
-</script>
 @endsection

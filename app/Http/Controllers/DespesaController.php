@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Despesa;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 
 class DespesaController extends Controller
@@ -15,7 +16,8 @@ class DespesaController extends Controller
 
     public function create()
     {
-        return view('despesas.create');
+        $categorias = Categoria::all(); // Ou qualquer nome que esteja usando
+    return view('despesas.create', compact('categorias'));
     }
 
     public function store(Request $request)

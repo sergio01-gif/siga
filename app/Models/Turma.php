@@ -18,15 +18,22 @@ class Turma extends Model
         return $this->belongsTo(Curso::class);
     }
 
-    public function anoAcademico()
-    {
-        return $this->belongsTo(AnoAcademico::class);
-    }
+   public function anoAcademico()
+{
+    return $this->belongsTo(\App\Models\AnoAcademico::class, 'ano_academico_id', 'id');
+}
+
 
     public function professores()
 {
     return $this->belongsToMany(Professor::class, 'cadeira_professor')
                 ->with('cadeiras');
 }
+
+public function estudantes()
+{
+    return $this->hasMany(Estudante::class);
+}
+
 
 }

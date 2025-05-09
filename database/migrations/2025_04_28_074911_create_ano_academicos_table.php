@@ -6,19 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+    public function up()
     {
-        Schema::create('ano_academicos', function (Blueprint $table) {
+        Schema::create('anos_academicos', function (Blueprint $table) {
             $table->id();
-            $table->year('ano_inicio');
-            $table->year('ano_fim');
-            $table->enum('estado', ['ativo', 'inativo'])->default('ativo');
+            $table->string('nome')->unique(); // Exemplo: 2024/2025
+            $table->date('inicio');
+            $table->date('fim');
             $table->timestamps();
         });
     }
 
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('ano_academicos');
+        Schema::dropIfExists('anos_academicos');
     }
 };

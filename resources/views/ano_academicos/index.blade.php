@@ -1,36 +1,53 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h1>Lista de Anos Acadêmicos</h1>
+<div class="max-w-6xl mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-xl font-bold text-[#0072CE]">Anos Acadêmicos</h1>
+        <a href="{{ route('ano-academicos.create') }}"
+           class="bg-[#0072CE] text-white px-4 py-2 rounded hover:bg-[#005fa3] text-sm">
+           + Novo Ano
+        </a>
+    </div>
 
-        <table class="table">
-            <thead>
+    @if(session('success'))
+        <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-2 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <div class="bg-white shadow rounded overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100 text-left">
                 <tr>
-                    <th>Ano de Início</th>
-                    <th>Ano de Fim</th>
-                    <th>Ações</th>
+                    <th class="px-4 py-2">Nome</th>
+                    <th class="px-4 py-2">Início</th>
+                    <th class="px-4 py-2">Fim</th>
+                    <th class="px-4 py-2">Ações</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($anoAcademicos as $anoAcademico)
-                    <tr>
-                        <td>{{ $anoAcademico->ano_inicio }}</td>
-                        <td>{{ $anoAcademico->ano_fim }}</td>
-                        <td>
-                        <a href="{{ route('ano_academicos.turmas', $anoAcademico->id) }}" class="btn btn-info">Ver Turmas</a>
-                            <a href="{{ route('ano_academicos.edit', $anoAcademico) }}" class="btn btn-warning">Editar</a>
-                            <form action="{{ route('ano_academicos.destroy', $anoAcademico) }}" method="POST" style="display:inline;">
+                @forelse ($anoAcademicos as $ano)
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-2">{{ $ano->nome }}</td>
+                        <td class="px-4 py-2">{{ \Carbon\Carbon::parse($ano->inicio)->format('d/m/Y') }}</td>
+                        <td class="px-4 py-2">{{ \Carbon\Carbon::parse($ano->fim)->format('d/m/Y') }}</td>
+                        <td class="px-4 py-2 flex gap-2">
+                            <a href="{{ route('ano-academicos.edit', $ano->id) }}" class="text-blue-600 hover:underline text-sm">Editar</a>
+                            <form action="{{ route('ano-academicos.destroy', $ano->id) }}" method="POST" onsubmit="return confirm('Tem certeza?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Excluir</button>
+                                <button class="text-red-600 hover:underline text-sm">Excluir</button>
                             </form>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="4" class="px-4 py-4 text-center text-gray-500">Nenhum ano cadastrado.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
-
-        <a href="{{ route('ano_academicos.create') }}" class="btn btn-primary">Novo Ano Acadêmico</a>
     </div>
+</div>
 @endsection

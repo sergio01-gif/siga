@@ -55,4 +55,10 @@ class RelatorioController extends Controller
         $pdf = PDF::loadView('relatorios.pdf_geral', compact('receitas', 'despesas'));
         return $pdf->download('relatorio_geral.pdf');
     }
+
+    public function index()
+{
+    return view('relatorios.index'); // ajuste conforme sua estrutura de views
+}
+
 }

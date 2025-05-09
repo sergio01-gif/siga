@@ -9,15 +9,15 @@ class Livro extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['titulo', 'autor_id', 'categoria_id', 'data_publicacao', 'quantidade'];
-
-    public function autor()
-    {
-        return $this->belongsTo(Autor::class);
-    }
-
-    public function categoria()
-    {
-        return $this->belongsTo(Categoria::class);
-    }
+    protected $fillable = [
+        'titulo',
+        'autor',
+        'categoria',
+        'codigo_exemplar',
+        'quantidade_total',
+        'quantidade_disponivel',
+        'ano_publicacao',
+        'editora',
+        'estado'
+    ];
 }

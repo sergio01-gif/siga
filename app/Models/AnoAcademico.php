@@ -2,19 +2,27 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AnoAcademico extends Model
 {
-    protected $fillable = ['ano_inicio', 'ano_fim', 'estado'];
+    use HasFactory;
 
+    protected $table = 'anos_academicos';
+
+    protected $fillable = [
+        'nome',
+        'inicio',
+        'fim',
+    ];
+
+    /**
+     * Relacionamento com turmas.
+     * Um ano acadêmico pode ter várias turmas.
+     */
     public function turmas()
     {
-        return $this->hasMany(Turma::class);
-    }
-
-    public function matriculas()
-    {
-        return $this->hasMany(Matricula::class);
+        return $this->hasMany(Turma::class, 'ano_academico_id');
     }
 }

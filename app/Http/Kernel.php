@@ -63,9 +63,18 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'admin' => \App\Http\Middleware\AdminMiddleware::class,
-    'aluno' => \App\Http\Middleware\AlunoMiddleware::class,
+    'estudante' => \App\Http\Middleware\EstudanteMiddleware::class,
     'professor' => \App\Http\Middleware\ProfessorMiddleware::class,
     'role' => \App\Http\Middleware\RoleMiddleware::class,
+    'redirecionar.tipo' => \App\Http\Middleware\RedirecionarPorTipo::class,
+    'check.tipo' => \App\Http\Middleware\CheckTipoUsuario::class,
+    'checkTipoUsuario' => \App\Http\Middleware\CheckTipoUsuario::class,
+    'coordenador' => \App\Http\Middleware\CoordenadorCursoMiddleware::class,
+    'admin' => \App\Http\Middleware\CheckIfAdmin::class,
+    'verificar.token.pagamento' => \App\Http\Middleware\VerificarTokenPagamento::class,
+
+
+
+    
     ];
 }

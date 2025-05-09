@@ -2,46 +2,42 @@
 
 @section('content')
 <div class="container">
-    <h2>Receitas</h2>
+    <h2>Lista de Receitas</h2>
 
+    <!-- Verifica se existe uma mensagem de sucesso -->
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-    <a href="{{ route('receitas.create') }}" class="btn btn-primary mb-3">Adicionar Receita</a>
-
-    <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
+    <table class="table">
+        <thead>
             <tr>
-                <th>#</th>
                 <th>Descrição</th>
-                <th>Valor (MZN)</th>
+                <th>Valor</th>
                 <th>Data de Recebimento</th>
                 <th>Categoria</th>
                 <th>Estudante</th>
-                <th>Observação</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($receitas as $receita)
+            @foreach($receitas as $receita)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $receita->descricao }}</td>
-                    <td>{{ number_format($receita->valor, 2, ',', '.') }}</td>
+                    <td>{{ number_format($receita->valor, 2, ',', '.') }} MT</td>
                     <td>{{ \Carbon\Carbon::parse($receita->data_recebimento)->format('d/m/Y') }}</td>
-                    <td>{{ $receita->categoria ?? '-' }}</td>
-                    <td>{{ $receita->estudante->nome ?? '-' }}</td>
-                    <td>{{ $receita->observacao ?? '-' }}</td>
+                    <td>{{ $receita->categoria ? $receita->categoria->nome : 'Sem categoria' }}</td>
+                    <td>{{ $receita->estudante ? $receita->estudante->nome : 'Nenhum estudante' }}</td>
                     <td>
+                        <!-- Botões de ação: Editar e Excluir -->
                         <a href="{{ route('receitas.edit', $receita->id) }}" class="btn btn-warning btn-sm">Editar</a>
 
                         <form action="{{ route('receitas.destroy', $receita->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tens certeza que queres eliminar?')">Eliminar</button>
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir esta receita?')">Excluir</button>
                         </form>
                     </td>
                 </tr>
@@ -53,5 +49,8 @@
     <div class="d-flex justify-content-center">
         {{ $receitas->links() }}
     </div>
+
+    <!-- Botão para adicionar uma nova receita -->
+    <a href="{{ route('receitas.create') }}" class="btn btn-primary mt-3">Adicionar Receita</a>
 </div>
 @endsection

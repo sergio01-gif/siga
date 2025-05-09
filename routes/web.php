@@ -1,142 +1,137 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-
-// Controllers
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RelatorioController;
-use App\Http\Controllers\FacturaController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\EstudanteDashboardController;
 use App\Http\Controllers\EstudanteController;
-use App\Http\Controllers\MensalidadeController;
-use App\Http\Controllers\TurmaController;
-
-// Recursos do sistema (CRUD)
-use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\CursoController;
-use App\Http\Controllers\AnoAcademicoController;
 use App\Http\Controllers\ProfessorController;
+use App\Http\Controllers\ProfessorDashboardController;
+use App\Http\Controllers\SecretariaController;
+use App\Http\Controllers\CoordenadorCursoController;
+use App\Http\Controllers\CoordenadorEstagioController;
+use App\Http\Controllers\BibliotecaController;
+use App\Http\Controllers\CursoController;
+use App\Http\Controllers\TurmaController;
 use App\Http\Controllers\MatriculaController;
-use App\Http\Controllers\CadeiraController;
-use App\Http\Controllers\ReceitaController;
-use App\Http\Controllers\DespesaController;
-use App\Http\Controllers\CategoriaController;
-use App\Http\Controllers\CategoriaLivroController;
+use App\Http\Controllers\MensalidadeController;
+use App\Http\Controllers\EstagioController;
 use App\Http\Controllers\LivroController;
-use App\Http\Controllers\AvaliacaoController;
-use App\Http\Controllers\NotaController;
-use App\Http\Controllers\AnuncioController;
+use App\Http\Controllers\EmprestimoController;
+use App\Http\Controllers\ConfiguracaoSistemaController;
+use App\Http\Controllers\PagamentoController;
+use App\Http\Controllers\FaturaController;
+use App\Http\Controllers\AnoAcademicoController;
 
-// Página pública inicial
+// Página inicial
 Route::get('/', function () {
     return view('welcome');
-})->name('home');
-
-// Login
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 });
 
-Auth::routes(['reset' => true]);
+// Autenticação
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// Admin
+Route::middleware(['auth', 'check.tipo:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard/export/pdf', [AdminDashboardController::class, 'exportarPdf'])->name('admin.dashboard.export.pdf');
+    Route::get('/dashboard/export/excel', [AdminDashboardController::class, 'exportarExcel'])->name('admin.dashboard.export.excel');
 
-// Logout
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+});
 
-// Rotas protegidas por autenticação
-Route::middleware(['auth'])->group(function () {
-
-    // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Perfil do usuário
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
-    // Relatórios em PDF
-    Route::prefix('relatorios')->name('relatorios.')->group(function () {
-        Route::get('/receitas/pdf', [RelatorioController::class, 'gerarPdfReceitas'])->name('gerarPdfReceitas');
-        Route::get('/despesas/pdf', [RelatorioController::class, 'gerarPdfDespesas'])->name('gerarPdfDespesas');
-        Route::get('/receitas', [RelatorioController::class, 'receitas'])->name('receitas');
-        Route::get('/despesas', [RelatorioController::class, 'despesas'])->name('despesas');
-        Route::get('/geral', [RelatorioController::class, 'geral'])->name('geral');
-    });
-
-    // Facturas
-    Route::prefix('facturas')->name('facturas.')->group(function () {
-        Route::get('/create', [FacturaController::class, 'create'])->name('create');
-        Route::get('/{factura}/pdf', [FacturaController::class, 'exportarPdf'])->name('pdf');
-    });
-    Route::resource('facturas', FacturaController::class)->except(['create']);
-
-    // Exportações de estudantes
-    Route::prefix('estudantes')->name('estudantes.')->group(function () {
-        Route::get('/export-excel', [EstudanteController::class, 'exportExcel'])->name('exportExcel');
-        Route::get('/export-pdf', [EstudanteController::class, 'exportPDF'])->name('exportPDF');
-    });
-
-    // Recursos CRUD
-    Route::resources([
-        'usuarios'            => UsuarioController::class,
-        'ano_academicos'      => AnoAcademicoController::class,
-        'anoAcademicos'      => AnoAcademicoController::class,
-        'cursos'              => CursoController::class,
-        'turmas'              => TurmaController::class,
-        'estudantes'          => EstudanteController::class,
-        'professores'         => ProfessorController::class,
-        'matriculas'          => MatriculaController::class,
-        'cadeiras'            => CadeiraController::class,
-        'receitas'            => ReceitaController::class,
-        'despesas'            => DespesaController::class,
-        'categorias'          => CategoriaController::class,
-        'categoriaslivro'     => CategoriaLivroController::class,
-        'categorias-livros'   => CategoriaLivroController::class,
-        'livros'              => LivroController::class,
-        'avaliacoes'          => AvaliacaoController::class,
-        'notas'               => NotaController::class,
-        'anuncios'            => AnuncioController::class,
-        'mensalidades'        => MensalidadeController::class,
-        
-    ]);
-    Route::resource('cadeiras', CadeiraController::class);
-    Route::post('/turmas', [TurmaController::class, 'store'])->name('turmas.store');
-
-
-    // Mensalidades
-    Route::post('mensalidades/{mensalidade}/pagar', [MensalidadeController::class, 'pagar'])->name('mensalidades.pagar');
-    Route::get('/mensalidades/create', [MensalidadeController::class, 'create'])->name('mensalidades.create');
-
-    // Turmas por Ano Acadêmico
-    Route::get('ano-academicos/{anoAcademico}/turmas', [TurmaController::class, 'turmasPorAno'])->name('ano_academicos.turmas');
-
-    // Estudantes de uma Turma
-    Route::get('/turmas/{turma}/estudantes', [TurmaController::class, 'estudantes'])->name('turmas.estudantes');
-
-    // Criar professor (rota extra se necessário)
-    Route::get('/professores/create', [ProfessorController::class, 'create'])->name('professors.create');
-
+Route::middleware(['auth', 'check.tipo:admin'])->prefix('admin')->group(function () {
+    Route::get('/estudantes', [EstudanteController::class, 'index'])->name('admin.estudantes.index');
     
-    Route::post('/estudantes/{id}/emitir-factura', [EstudanteController::class, 'emitirFactura'])->name('estudantes.emitirFactura');
-    // routes/web.php
-
-Route::get('estudantes/{id}/edit', [EstudanteController::class, 'edit'])->name('estudantes.edit');
-
-Route::get('estudantes/{id}', [EstudanteController::class, 'show'])->name('estudantes.show');
-
-Route::get('/professores/{professor}/disciplinas', [ProfessorController::class, 'disciplinas'])->name('professores.disciplinas');
-Route::post('/professores/{professor}/disciplinas', [ProfessorController::class, 'atribuirDisciplinas'])->name('professores.atribuirDisciplinas');
-
-// Rota para criar um novo professor
-Route::get('/professores/create', [ProfessorController::class, 'create'])->name('professores.create');
-Route::delete('/professores/{id}', [ProfessorController::class, 'destroy'])->name('professores.destroy');
-// Rota para imprimir a lista de professores
-Route::get('/professores/imprimir', [ProfessorController::class, 'imprimir'])->name('professores.imprimir');
-
-
-
-
-
 });
+
+Route::middleware(['auth', 'check.tipo:admin'])->prefix('admin')->group(function () {
+    Route::get('/estudantes/export/pdf', [EstudanteController::class, 'exportPDF'])->name('estudantes.exportPdf');
+    Route::get('/estudantes/export/excel', [App\Http\Controllers\EstudanteController::class, 'exportExcel'])->name('estudantes.exportExcel');
+});
+
+Route::middleware(['auth', 'check.tipo:admin'])->prefix('admin')->group(function () {
+    Route::resource('professores', ProfessorController::class)->names('admin.professores');
+
+
+    // Exportações (PDF / Excel)
+ 
+    Route::get('professores/export/pdf', [ProfessorController::class, 'exportPDF'])->name('admin.professores.exportPdf');
+    Route::get('professores/export/excel', [ProfessorController::class, 'exportExcel'])->name('admin.professores.exportExcel');
+});
+
+
+
+// Estudante
+Route::middleware(['auth', 'check.tipo:estudante'])->prefix('estudante')->group(function () {
+    Route::get('/dashboard', [EstudanteDashboardController::class, 'index'])->name('estudantes.dashboard');
+    Route::get('/perfil', [EstudanteController::class, 'perfil'])->name('estudantes.perfil');
+    Route::post('/perfil', [EstudanteController::class, 'atualizarPerfil'])->name('estudantes.perfil.atualizar');
+    Route::get('/notas', [EstudanteController::class, 'notas'])->name('estudantes.notas');
+    Route::get('/pagamentos', [EstudanteController::class, 'pagamentos'])->name('estudantes.pagamentos');
+    Route::get('/faturas/{id}/visualizar', [FaturaController::class, 'visualizar'])->name('faturas.visualizar');
+});
+
+// Professor
+Route::middleware(['auth', 'check.tipo:professor'])->prefix('professor')->group(function () {
+    Route::get('/dashboard', [ProfessorDashboardController::class, 'index'])->name('professores.dashboard');
+});
+
+// Secretaria
+Route::middleware(['auth', 'check.tipo:secretaria'])->prefix('secretaria')->group(function () {
+    Route::get('/dashboard', [SecretariaController::class, 'dashboard'])->name('secretaria.dashboard');
+});
+
+// Coordenador de Curso
+Route::middleware(['auth', 'check.tipo:coordenador_de_curso'])->prefix('coordenador')->group(function () {
+    Route::get('/dashboard', [CoordenadorCursoController::class, 'index'])->name('coordenador_curso.dashboard');
+});
+
+// Coordenador de Estágio
+Route::middleware(['auth', 'check.tipo:coordenador_estagio'])->prefix('coordenador-estagio')->group(function () {
+    Route::get('/dashboard', [CoordenadorEstagioController::class, 'dashboard'])->name('coordenador_estagio.dashboard');
+});
+
+// Bibliotecário
+Route::middleware(['auth', 'check.tipo:bibliotecario'])->prefix('biblioteca')->group(function () {
+    Route::get('/dashboard', [BibliotecaController::class, 'dashboard'])->name('biblioteca.dashboard');
+});
+
+// Recursos gerais protegidos (para qualquer usuário autenticado)
+Route::middleware(['auth'])->group(function () {
+    Route::resources([
+        'cursos' => CursoController::class,
+        'estudantes' => EstudanteController::class,
+        'professores' => ProfessorController::class,
+        'turmas' => TurmaController::class,
+        'matriculas' => MatriculaController::class,
+        'mensalidades' => MensalidadeController::class,
+        'estagios' => EstagioController::class,
+        'livros' => LivroController::class,
+        'emprestimos' => EmprestimoController::class,
+        'configuracoes' => ConfiguracaoSistemaController::class,
+
+    ]);
+
+    // Pagamentos
+    Route::post('/pagamentos/gerar', [PagamentoController::class, 'gerar'])->name('pagamentos.gerar');
+    Route::get('/pagamentos/fatura/{id}', [PagamentoController::class, 'gerarFatura'])->name('pagamentos.fatura');
+    Route::post('/api/notificacao-pagamento', [PagamentoController::class, 'receberNotificacao'])
+        ->middleware('verificar.token.pagamento');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('ano-academicos', AnoAcademicoController::class);
+});
+
+use App\Http\Controllers\UsuarioController;
+
+Route::middleware(['auth', 'check.tipo:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('usuarios', UsuarioController::class)->names('usuarios');
+});
+
+
+

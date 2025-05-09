@@ -7,107 +7,51 @@ use Illuminate\Http\Request;
 
 class AnoAcademicoController extends Controller
 {
-    /**
-     * Exibe a lista de anos acadêmicos.
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
-        // Obtém todos os anos acadêmicos
-        $anoAcademicos = AnoAcademico::all();
-
-        // Passa a variável 'anoAcademicos' para a view
+        $anoAcademicos = AnoAcademico::orderByDesc('inicio')->get();
         return view('ano_academicos.index', compact('anoAcademicos'));
     }
 
-    /**
-     * Exibe o formulário para criar um novo ano acadêmico.
-     *
-     * @return \Illuminate\View\View
-     */
     public function create()
     {
         return view('ano_academicos.create');
     }
 
-    /**
-     * Armazena um novo ano acadêmico no banco de dados.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(Request $request)
     {
-        // Valida os dados recebidos
         $request->validate([
-            'ano_inicio' => 'required|integer',
-            'ano_fim' => 'required|integer',
+            'nome' => 'required|string|max:255|unique:anos_academicos,nome',
+            'inicio' => 'required|date',
+            'fim' => 'required|date|after:inicio',
         ]);
 
-        // Cria um novo ano acadêmico no banco de dados
-        AnoAcademico::create($request->all());
+        AnoAcademico::create($request->only('nome', 'inicio', 'fim'));
 
-        // Redireciona para a página de listagem de anos acadêmicos
-        return redirect()->route('ano_academicos.index');
+        return redirect()->route('ano-academicos.index')->with('success', 'Ano acadêmico criado com sucesso.');
     }
 
-    /**
-     * Exibe os detalhes de um ano acadêmico específico.
-     *
-     * @param  \App\Models\AnoAcademico  $ano
-     * @return \Illuminate\View\View
-     */
-    public function show(AnoAcademico $ano)
+    public function edit(AnoAcademico $anoAcademico)
     {
-        return view('ano_academicos.show', compact('ano'));
+        return view('ano_academicos.edit', compact('anoAcademico'));
     }
 
-    /**
-     * Exibe o formulário para editar um ano acadêmico específico.
-     *
-     * @param  \App\Models\AnoAcademico  $ano
-     * @return \Illuminate\View\View
-     */
-    public function edit(AnoAcademico $ano)
+    public function update(Request $request, AnoAcademico $anoAcademico)
     {
-        return view('ano_academicos.edit', compact('ano'));
-    }
-
-    /**
-     * Atualiza os dados de um ano acadêmico específico no banco de dados.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\AnoAcademico  $ano
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Request $request, AnoAcademico $ano)
-    {
-        // Valida os dados recebidos
         $request->validate([
-            'ano_inicio' => 'required|integer',
-            'ano_fim' => 'required|integer',
+            'nome' => 'required|string|max:255|unique:anos_academicos,nome,' . $anoAcademico->id,
+            'inicio' => 'required|date',
+            'fim' => 'required|date|after:inicio',
         ]);
 
-        // Atualiza o ano acadêmico no banco de dados
-        $ano->update($request->all());
+        $anoAcademico->update($request->only('nome', 'inicio', 'fim'));
 
-        // Redireciona para a página de listagem de anos acadêmicos
-        return redirect()->route('ano_academicos.index');
+        return redirect()->route('ano-academicos.index')->with('success', 'Ano acadêmico atualizado com sucesso.');
     }
 
-    /**
-     * Exclui um ano acadêmico específico do banco de dados.
-     *
-     * @param  \App\Models\AnoAcademico  $ano
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(AnoAcademico $ano)
+    public function destroy(AnoAcademico $anoAcademico)
     {
-        // Exclui o ano acadêmico do banco de dados
-        $ano->delete();
-
-        // Redireciona para a página de listagem de anos acadêmicos
-        return redirect()->route('ano_academicos.index');
+        $anoAcademico->delete();
+        return redirect()->route('ano-academicos.index')->with('success', 'Ano acadêmico removido com sucesso.');
     }
 }

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>IMPOM</title>
-  <link rel="icon" href="{{ asset('favicon_io/android-chrome-192x192.png') }}" type="image/x-icon">
+  <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
 
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -24,7 +24,7 @@
   <header class="bg-white shadow-md py-6 px-4 text-center fixed top-0 w-full z-50">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between">
       <div class="flex items-center space-x-4">
-        <img src="{{asset('favicon_io/android-chrome-192x192.png')}}" class="w-12 h-12" alt="Logo">
+        <img src="{{asset('images/logo.png')}}" class="w-12 h-12" alt="Logo">
         <h1 class="text-3xl font-bold text-[#0072CE]">IMPOM</h1>
       </div>
       <nav class="mt-4 md:mt-0 space-x-4">

@@ -2,53 +2,35 @@
 
 namespace App\Exports;
 
-use App\Models\Estudante;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class EstudantesExport implements FromCollection, WithHeadings, WithMapping
+class EstudantesExport implements FromView
 {
-    /**
-     * Retorna os dados a serem exportados.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function collection()
+    protected $estudantes;
+    protected $config;
+    protected $curso;
+    protected $turma;
+    protected $usuario;
+
+    public function __construct($estudantes, $config, $curso, $turma, $usuario)
     {
-        return Estudante::all();  // Aqui você pode adicionar filtros ou relacionamentos se necessário
+        $this->estudantes = $estudantes;
+        $this->config = $config;
+        $this->curso = $curso;
+        $this->turma = $turma;
+        $this->usuario = $usuario;
     }
 
-    /**
-     * Retorna os cabeçalhos das colunas no Excel.
-     *
-     * @return array
-     */
-    public function headings(): array
+    public function view(): View
     {
-        return [
-            'Nome',
-            'Email',
-            'Telefone',
-            'Data de Nascimento',
-            'Curso',
-        ];
-    }
-
-    /**
-     * Mapeia os dados para o formato das células no Excel.
-     *
-     * @param \App\Models\Estudante $estudante
-     * @return array
-     */
-    public function map($estudante): array
-    {
-        return [
-            $estudante->nome,
-            $estudante->email,
-            $estudante->telefone,
-            \Carbon\Carbon::parse($estudante->data_nascimento)->format('d/m/Y'),
-            $estudante->curso->nome ?? 'Sem Curso',
-        ];
+        return view('estudantes.exports.pdf', [
+            'estudantes' => $this->estudantes,
+            'config' => $this->config,
+            'curso' => $this->curso,
+            'turma' => $this->turma,
+            'usuario' => $this->usuario,
+            'dataExportacao' => now()->format('d/m/Y H:i')
+        ]);
     }
 }

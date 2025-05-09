@@ -184,6 +184,8 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        App\Providers\ConfiguracaoSistemaProvider::class,
+
 
 
         /*
